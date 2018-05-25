@@ -57,7 +57,7 @@ Make the following changes on each node within your OCP 3.9 installation
 
 `vm.max_map_count = 262144`
 
-- execte the foolowing command
+- Execute the following command
 
 ```
 sysctl vm.max_map_count=262144
