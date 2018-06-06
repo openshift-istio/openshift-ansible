@@ -47,16 +47,7 @@
   shell: echo "{{ serverCert.stdout }}" | openssl base64 -d -A -out {{ openshift_istio_sidecar_injector_server_cert }}
 
 - name: Create a secret containing the key.pem and cert.pem
-  oc_secret:
-    namespace: "{{ openshift_istio_namespace }}"
-    state: present
-    name: "{{ openshift_istio_sidecar_injector_secret }}"
-    force: True
-    files:
-    - name: key.pem
-      path: "{{ openshift_istio_sidecar_injector_server_key }}"
-    - name: cert.pem
-      path: "{{ openshift_istio_sidecar_injector_server_cert }}"
+  command: "{{ openshift_client_binary }} create secret generic {{ openshift_istio_sidecar_injector_secret }} -n {{ openshift_istio_namespace }} --from-file=key.pem={{ openshift_istio_sidecar_injector_server_key }} --from-file=cert.pem={{ openshift_istio_sidecar_injector_server_cert }}"
 
 - name: Disable injection policy by default
   lineinfile:

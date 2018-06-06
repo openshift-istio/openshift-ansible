@@ -52,3 +52,17 @@
       "jaegertracing/jaeger-query:{{default_istio_jaeger_image_tag}}": "{{openshift_istio_image_prefix}}jaeger-query{{openshift_istio_image_suffix}}:{{openshift_istio_jaeger_image_version}}"
       "jaegertracing/jaeger-agent:{{default_istio_jaeger_image_tag}}": "{{openshift_istio_image_prefix}}jaeger-agent{{openshift_istio_image_suffix}}:{{openshift_istio_jaeger_image_version}}"
   when: openshift_istio_install_enterprise
+
+- name: Initialise oc binary using master configuration
+  set_fact:
+    openshift_client_binary: "/usr/bin/oc --config=/etc/origin/master/admin.kubeconfig"
+  when: not openshift_istio_oc_token
+
+- name:
+  command: cat /run/secrets/kubernetes.io/serviceaccount/token
+  register: openshift_client_token
+
+- name: Initialise oc binary using token
+  set_fact:
+    openshift_client_binary: "/usr/bin/oc --token={{ openshift_client_token.stdout }}"
+  when: openshift_istio_oc_token

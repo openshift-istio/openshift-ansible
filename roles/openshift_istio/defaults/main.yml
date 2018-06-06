@@ -24,7 +24,8 @@ openshift_istio_install: true
 openshift_istio_install_community: false
 openshift_istio_install_auth: false
 openshift_istio_install_launcher: false
-openshift_client_binary: "/usr/bin/oc --config=/etc/origin/master/admin.kubeconfig"
+
+openshift_istio_oc_token: false
 
 openshift_istio_service_accounts:
   - "istio-ca-service-account"
