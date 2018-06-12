@@ -9,7 +9,7 @@ This document describes the steps for installing the Istio Tech Preview release 
    - [Updating the Nodes](#updating-the-nodes)
 - [Installing Istio](#installing-istio)
 - [Verifying Installation](#verifying-installation)
-
+- [Removing Istio](#removing-istio)
 
 ## Preparing the OCP 3.9 Installation
 
@@ -65,10 +65,7 @@ sysctl vm.max_map_count=262144
 
 ## Installing Istio
 
-The following steps will install Istio into an existing OCP 3.9 installation
-
-- Upload the `istio_installer_template.yaml` template to the master node
-- Execute the following commands, specifying the public URL of your master as the value of the parameter
+The following steps will install Istio into an existing OCP 3.9 installation, they can be executed from any host with access to the cluster
 
 ```
 oc new-project istio-system
@@ -79,7 +76,7 @@ oc new-app istio_installer_template.yaml --param=OPENSHIFT_ISTIO_MASTER_PUBLIC_U
 ```
 
 ## Verifying Installation
-The above instructions will create a job within the istio-system project to install Istio using ansible playbooks, the progress of the installation can be followed by either watching the pods or the log output from the `openshift-ansible-istio-job` pod.
+The above instructions will create a job within the istio-system project to install Istio using ansible playbooks, the progress of the installation can be followed by either watching the pods or the log output from the `openshift-ansible-istio-installer-job` pod.
 
 To watch the progress of the pods execute the following command
 
@@ -87,25 +84,25 @@ To watch the progress of the pods execute the following command
 oc get pods -n istio-system -w
 ```
 
-Once the `openshift-ansible-istio-job` has completed run `oc get pods -n istio-system` and verify you have state similar to the following
+Once the `openshift-ansible-istio-installer-job` has completed run `oc get pods -n istio-system` and verify you have state similar to the following
 
 ```
-NAME                                      READY     STATUS      RESTARTS   AGE
-elasticsearch-0                           1/1       Running     0          1m
-elasticsearch-1                           1/1       Running     0          1m
-grafana-6f4fd4986f-gf2sp                  1/1       Running     0          1m
-istio-ca-ddb878d84-cmgf2                  1/1       Running     0          1m
-istio-ingress-76b5496c58-9cd4k            1/1       Running     0          1m
-istio-mixer-56f49dc667-2phzt              3/3       Running     0          1m
-istio-mixer-validator-65c7fccc64-2fkgc    1/1       Running     0          1m
-istio-pilot-76dd785958-q545x              2/2       Running     0          1m
-istio-sidecar-injector-599d8c454c-kxbwm   1/1       Running     0          1m
-jaeger-agent-xvp8k                        1/1       Running     0          1m
-jaeger-collector-575866c585-pjcjc         1/1       Running     0          1m
-jaeger-query-657776775f-dj5k4             1/1       Running     0          1m
-kiali-7f887bf646-prfdf                    1/1       Running     0          56s
-openshift-ansible-istio-job-9b7gd         0/1       Completed   0          2m
-prometheus-cf8456855-qgnbn                1/1       Running     0          1m
+NAME                                          READY     STATUS      RESTARTS   AGE
+elasticsearch-0                               1/1       Running     0          41s
+elasticsearch-1                               1/1       Running     0          31s
+grafana-6f4fd4986f-czr6s                      1/1       Running     0          45s
+istio-ca-7cd8c577cc-ng7wc                     1/1       Running     0          1m
+istio-ingress-57866f979-rgj4l                 1/1       Running     0          1m
+istio-mixer-7494d796df-vx9tx                  3/3       Running     0          1m
+istio-mixer-validator-56488d76d7-h46kt        1/1       Running     0          59s
+istio-pilot-fdd46f9bb-vtr5x                   2/2       Running     0          1m
+istio-sidecar-injector-6b58cdf5b8-f2p2s       1/1       Running     0          53s
+jaeger-agent-lrhw5                            1/1       Running     0          29s
+jaeger-collector-575866c585-8bmv2             1/1       Running     0          29s
+jaeger-query-657776775f-nc2ls                 1/1       Running     0          29s
+kiali-795b86cfc7-w7b85                        1/1       Running     0          26s
+openshift-ansible-istio-installer-job-9svtx   0/1       Completed   0          1m
+prometheus-cf8456855-r96hb                    1/1       Running     0          44s
 ```
 
 If you have also chosen to install the Farbic8 launcher then you should monitor the containers within the devex project until the following state has been reached
@@ -115,4 +112,12 @@ NAME                          READY     STATUS    RESTARTS   AGE
 configmapcontroller-1-8rr6w   1/1       Running   0          1m
 launcher-backend-2-2wg86      1/1       Running   0          1m
 launcher-frontend-2-jxjsd     1/1       Running   0          1m
+```
+
+## Removing Istio
+
+The following step will remove Istio from an existing installation, it can be executed from any host with access to the cluster.
+
+```
+oc new-app istio_removal_template.yaml
 ```
