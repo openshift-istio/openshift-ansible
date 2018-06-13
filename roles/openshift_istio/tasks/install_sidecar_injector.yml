@@ -39,6 +39,14 @@
 - name: Approve CSR
   command: "{{ openshift_client_binary }} adm certificate approve {{ openshift_istio_sidecar_csr }}"
 
+- name: Wait for CSR to be issued
+  shell: "{{ openshift_client_binary }} get csr {{ openshift_istio_sidecar_csr }} | grep Issued"
+  register: result
+  until: result.rc == 0
+  retries: 180
+  delay: 2
+  ignore_errors: yes
+
 - name: Retrieve the server certificate
   command: "{{ openshift_client_binary }} get csr {{ openshift_istio_sidecar_csr }} -o 'jsonpath={.status.certificate}'"
   register: serverCert
