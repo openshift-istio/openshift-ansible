@@ -4,6 +4,7 @@ openshift_istio_files: "roles/openshift_istio/files"
 
 openshift_istio_yaml: "{{ openshift_istio_files }}/istio.yaml"
 openshift_istio_auth_yaml: "{{ openshift_istio_files }}/istio-auth.yaml"
+openshift_istio_resources_yaml: "{{ openshift_istio_files }}/istio-resources.yaml"
 openshift_istio_mixer_validator_yaml: "{{ openshift_istio_files }}/istio-mixer-validator.yaml"
 openshift_istio_sidecar_injector_yaml: "{{ openshift_istio_files }}/istio-sidecar-injector.yaml"
 openshift_istio_sidecar_injector_webhook_yaml: "{{ openshift_istio_files }}/istio-sidecar-injector-webhook.yaml"
@@ -38,3 +39,13 @@ openshift_istio_jaeger_yaml_configuration_files:
 
 openshift_istio_kiali_yaml_configuration_files:
   - "{{ openshift_kiali_yaml }}"
+
+openshift_istio_resources:
+  - "attributemanifests"
+  - "kuberneteses"
+  - "kubernetesenvs"
+  - "logentries"
+  - "metrics"
+  - "prometheuses"
+  - "rules"
+  - "stdios"

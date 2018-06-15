@@ -20,6 +20,18 @@
   ignore_errors: yes
   when: not (openshift_istio_install_auth| bool)
 
+- name: Wait for resource CRDs to establish
+  shell: "{{ openshift_client_binary }} get --raw /apis/config.istio.io/v1alpha2/{{ item }}"
+  register: result
+  until: result.rc == 0
+  retries: 10
+  delay: 2
+  ignore_errors: yes
+  with_items: "{{ openshift_istio_resources }}"
+
+- name: Create Istio resources
+  command: "{{ openshift_client_binary }} create -f {{ openshift_istio_resources_yaml }}"
+
 - name: Install Istio Mixer Validator
   command: "{{ openshift_client_binary }} create -f {{ openshift_istio_mixer_validator_yaml }}"
 
